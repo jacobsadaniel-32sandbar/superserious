@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superserious — Design Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1a1410;
+    }
+
+    /* ── INTRO ── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: #1a1410;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 36px;
+      z-index: 100;
+      transition: opacity 0.9s ease;
+    }
+
+    .line {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: #f0ebb8;
+      letter-spacing: 0.28em;
+      font-weight: 300;
+      text-align: center;
+      min-height: 20px;
+    }
+
+    /* ── FLOATING WORDMARK ── */
+    #sw {
+      font-family: 'DM Serif Display', serif;
+      color: #e8721a;
+      white-space: nowrap;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      opacity: 0;
+      top: 62%;
+      margin-top: -34px;
+      font-size: clamp(40px, 7vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    /* ── LANDING ── */
+    #landing {
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.3s ease;
+      pointer-events: none;
+    }
+
+    #landing.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #landing-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 38%;
+      display: block;
+    }
+
+    #landing-fallback {
+      position: absolute;
+      inset: 0;
+      background: #1e2820;
+    }
+
+    #landing-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(20, 26, 22, 0.10) 0%,
+        rgba(20, 26, 22, 0.00) 40%,
+        rgba(18, 22, 18, 0.65) 100%
+      );
+    }
+
+    /* top tagline */
+    #tt {
+      position: absolute;
+      top: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: #e8721a;
+      letter-spacing: 0.28em;
+      font-weight: 300;
+      opacity: 0;
+      transition: opacity 1s ease;
+      white-space: nowrap;
+      z-index: 3;
+    }
+
+    /* studio + email — below wordmark */
+    #lc {
+      position: absolute;
+      top: calc(62vh + 48px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 3;
+      pointer-events: auto;
+    }
+
+    #ls {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: #e8721a;
+      letter-spacing: 0.36em;
+      font-weight: 300;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 1s ease;
+      white-space: nowrap;
+    }
+
+    #le {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: #e8721a;
+      letter-spacing: 0.22em;
+      font-weight: 300;
+      opacity: 0;
+      transition: opacity 1s ease, color 0.2s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    #le:hover { color: #f0ebb8; }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="line" id="line1"></div>
+    <div class="line" id="line2"></div>
+  </div>
+
+  <!-- LANDING -->
+  <div id="landing">
+    <div id="landing-fallback"></div>
+
+    <!--
+    ╔═══════════════════════════════════════════════════════════╗
+    ║  TO ADD YOUR PHOTO:                                       ║
+    ║  1. Put your image file in the same folder as this file   ║
+    ║  2. Replace "your-photo.jpg" with your actual filename    ║
+    ║     e.g.  src="dahlia.jpg"                                ║
+    ╚═══════════════════════════════════════════════════════════╝
+    -->
+    <img id="landing-photo" src="FLOWER.jpeg" alt="">
+
+    <div id="landing-overlay"></div>
+
+    <p id="tt">a reminder of how beautiful the world is</p>
+
+    <div id="lc">
+      <div id="ls">design studio</div>
+      <!--
+        Replace both instances of the email below with your real address
+      -->
+      <a href="mailto:info@superserious.com" id="le">info@superserious.com</a>
+    </div>
+
+
+  </div>
+
+  <!-- WORDMARK — floats above everything, animates into landing -->
+  <div id="sw">superserious</div>
+
+  <script>
+    const intro   = document.getElementById('intro');
+    const line1   = document.getElementById('line1');
+    const line2   = document.getElementById('line2');
+    const landing = document.getElementById('landing');
+    const sw      = document.getElementById('sw');
+    const tt      = document.getElementById('tt');
+    const ls      = document.getElementById('ls');
+    const le      = document.getElementById('le');
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    async function typeInto(el, str, speed) {
+      for (let i = 0; i < str.length; i++) {
+        el.textContent += str[i];
+        await sleep(speed + Math.random() * 30);
+      }
+    }
+
+    async function typeWithOrange(el, before, orange, speed) {
+      await typeInto(el, before, speed);
+      const span = document.createElement('span');
+      span.style.cssText = 'font-family:"DM Serif Display",serif;color:#e8721a;letter-spacing:-0.01em;';
+      el.appendChild(span);
+      for (let i = 0; i < orange.length; i++) {
+        span.textContent += orange[i];
+        await sleep(speed + Math.random() * 30);
+      }
+    }
+
+    function fadeIn(el, ms, delay = 0) {
+      setTimeout(() => {
+        el.style.transition = `opacity ${ms}ms ease`;
+        el.style.opacity = '1';
+      }, delay);
+    }
+
+    function fadeOut(el, ms) {
+      return new Promise(r => {
+        el.style.transition = `opacity ${ms}ms ease`;
+        el.style.opacity = '0';
+        setTimeout(r, ms);
+      });
+    }
+
+    async function run() {
+      // reset
+      intro.style.transition  = 'none';
+      intro.style.opacity     = '1';
+      landing.classList.remove('active');
+      landing.style.opacity   = '0';
+      line1.textContent       = '';
+      line2.textContent       = '';
+      sw.style.transition     = 'none';
+      sw.style.opacity        = '0';
+      sw.style.top            = '50%';
+      sw.style.marginTop      = '-34px';
+      sw.style.fontSize       = 'clamp(40px, 7vw, 64px)';
+      tt.style.opacity        = '0';
+      ls.style.opacity        = '0';
+      le.style.opacity        = '0';
+
+
+      await sleep(700);
+
+      // line 1 — cream
+      await typeInto(line1, 'life... not so serious', 95);
+      await sleep(900);
+
+      // line 2 — cream + orange superserious
+      await typeWithOrange(line2, "design... we're ", 'superserious', 95);
+
+      // hold — both lines readable
+      await sleep(2800);
+
+      // everything fades to black completely
+      await fadeOut(intro, 900);
+      await sleep(400);
+
+      // superserious appears alone on dark screen
+      sw.style.opacity = '1';
+      await sleep(900);
+
+      // landing fades in behind
+      landing.classList.add('active');
+      landing.style.transition = 'opacity 1.3s ease';
+      landing.style.opacity    = '1';
+
+      // wordmark slides up into position
+      await sleep(80);
+      sw.style.transition = 'top 1.3s cubic-bezier(0.4,0,0.2,1), font-size 1.3s cubic-bezier(0.4,0,0.2,1)';
+      sw.style.top        = '62%';
+      sw.style.marginTop  = '-32px';
+
+      // UI fades in staggered
+      await sleep(1100);
+      fadeIn(tt, 900);
+      await sleep(500);
+      fadeIn(ls, 900);
+      await sleep(400);
+      fadeIn(le, 900);
+
+    }
+
+    run();
+  </script>
+
+</body>
+</html>
